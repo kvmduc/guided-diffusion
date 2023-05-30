@@ -11,9 +11,10 @@ import math
 import numpy as np
 import torch as th
 
+
 from .nn import mean_flat
 from .losses import normal_kl, discretized_gaussian_log_likelihood
-
+from guided_diffusion import dist_util
 
 def get_named_beta_schedule(schedule_name, num_diffusion_timesteps):
     """
@@ -518,9 +519,15 @@ class GaussianDiffusion:
             from tqdm.auto import tqdm
 
             indices = tqdm(indices)
+        
+        origin_classes = model_kwargs['y']
 
         for i in indices:
+            if i % 4 == 0:
+                # model_kwargs['y'] = th.randint(low=0, high=model.num_classes, size=(origin_classes.shape,), device=dist_util.dev())
+                model_kwargs['y'] = th.randint(low=605, high=626, size=(origin_classes.shape,), device=dist_util.dev())
             t = th.tensor([i] * shape[0], device=device)
+            
             with th.no_grad():
                 out = self.p_sample(
                     model,
