@@ -521,11 +521,14 @@ class GaussianDiffusion:
             indices = tqdm(indices)
         
         origin_classes = model_kwargs['y']
+        print(origin_classes)
 
         for i in indices:
-            if i % 4 == 0:
+            if i % 50 == 0:
                 # model_kwargs['y'] = th.randint(low=0, high=model.num_classes, size=(origin_classes.shape,), device=dist_util.dev())
-                model_kwargs['y'] = th.randint(low=605, high=626, size=(origin_classes.shape,), device=dist_util.dev())
+                model_kwargs['y'] = th.randint(low=625, high=625, size=(origin_classes.shape[0],), device=dist_util.dev())
+            else:
+                model_kwargs['y'] = origin_classes
             t = th.tensor([i] * shape[0], device=device)
             
             with th.no_grad():

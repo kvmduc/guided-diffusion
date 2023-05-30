@@ -84,6 +84,7 @@ def main():
             model_kwargs=model_kwargs,
             cond_fn=cond_fn,
             device=dist_util.dev(),
+            progress=True
         )
         sample = ((sample + 1) * 127.5).clamp(0, 255).to(th.uint8)
         sample = sample.permute(0, 2, 3, 1)
